@@ -1,0 +1,60 @@
+databaseChangeLog:
+  - changeSet:
+      id: 001_create_table_bank_account
+      author: thiagxrg
+      comment: Creates payment.bank_account.
+      changes:
+        - sqlFile:
+            path: 001_create_table_bank_account.sql
+            relativeToChangelogFile: true
+            stripComments: false
+      rollback:
+        - sqlFile:
+            path: ../../05_rollbacks/01_ddl/03_tables/001_create_table_bank_account.rollback.sql
+            relativeToChangelogFile: true
+            stripComments: false
+
+  - changeSet:
+      id: 002_create_table_payment
+      author: thiagxrg
+      comment: Creates payment.payment. FKs are added in 04_alter.
+      changes:
+        - sqlFile:
+            path: 002_create_table_payment.sql
+            relativeToChangelogFile: true
+            stripComments: false
+      rollback:
+        - sqlFile:
+            path: ../../05_rollbacks/01_ddl/03_tables/002_create_table_payment.rollback.sql
+            relativeToChangelogFile: true
+            stripComments: false
+
+  - changeSet:
+      id: 003_create_table_invoice
+      author: thiagxrg
+      comment: Creates payment.invoice. FKs are added in 04_alter.
+      changes:
+        - sqlFile:
+            path: 003_create_table_invoice.sql
+            relativeToChangelogFile: true
+            stripComments: false
+      rollback:
+        - sqlFile:
+            path: ../../05_rollbacks/01_ddl/03_tables/003_create_table_invoice.rollback.sql
+            relativeToChangelogFile: true
+            stripComments: false
+
+  - changeSet:
+      id: 004_create_sequence_invoice_number
+      author: thiagxrg
+      comment: Creates payment.seq_invoice_number, used to build invoice.invoice_number (INV-000123).
+      changes:
+        - sqlFile:
+            path: 004_create_sequence_invoice_number.sql
+            relativeToChangelogFile: true
+            stripComments: false
+      rollback:
+        - sqlFile:
+            path: ../../05_rollbacks/01_ddl/03_tables/004_create_sequence_invoice_number.rollback.sql
+            relativeToChangelogFile: true
+            stripComments: false
