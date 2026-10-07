@@ -1,0 +1,15 @@
+databaseChangeLog:
+  - changeSet:
+      id: 001_create_schema_payment
+      author: thiagxrg
+      comment: Creates the payment schema.
+      changes:
+        - sqlFile:
+            path: 001_create_schema_payment.sql
+            relativeToChangelogFile: true
+            stripComments: false
+      rollback:
+        - sqlFile:
+            path: ../../05_rollbacks/01_ddl/01_schemas/001_create_schema_payment.rollback.sql
+            relativeToChangelogFile: true
+            stripComments: false
