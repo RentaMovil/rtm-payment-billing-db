@@ -1,0 +1,1 @@
+REVOKE SELECT, INSERT, UPDATE, DELETE ON SCHEMA::payment TO payment_app;

@@ -1,0 +1,30 @@
+databaseChangeLog:
+  - changeSet:
+      id: 001_grant_payment_schema_to_payment_app
+      author: thiagxrg
+      comment: Gives payment_app data access to the payment schema only.
+      changes:
+        - sqlFile:
+            path: 001_grant_payment_schema_to_payment_app.sql
+            relativeToChangelogFile: true
+            stripComments: false
+      rollback:
+        - sqlFile:
+            path: ../../05_rollbacks/03_dcl/01_grants/001_grant_payment_schema_to_payment_app.rollback.sql
+            relativeToChangelogFile: true
+            stripComments: false
+
+  - changeSet:
+      id: 002_grant_insert_audit_to_payment_app
+      author: thiagxrg
+      comment: Lets payment_app append to shared.audit (created by rtm-iam-db, which migrates first).
+      changes:
+        - sqlFile:
+            path: 002_grant_insert_audit_to_payment_app.sql
+            relativeToChangelogFile: true
+            stripComments: false
+      rollback:
+        - sqlFile:
+            path: ../../05_rollbacks/03_dcl/01_grants/002_grant_insert_audit_to_payment_app.rollback.sql
+            relativeToChangelogFile: true
+            stripComments: false
