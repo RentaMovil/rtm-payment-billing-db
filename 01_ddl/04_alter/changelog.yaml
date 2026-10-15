@@ -1,0 +1,17 @@
+databaseChangeLog:
+  - changeSet:
+      id: 001_add_fks_payment
+      author: thiagxrg
+      comment: >-
+        Adds the FKs to booking.reservation and iam.[user]. Both already exist: this repo runs
+        last, after rtm-booking-db and rtm-iam-db have migrated.
+      changes:
+        - sqlFile:
+            path: 001_add_fks_payment.sql
+            relativeToChangelogFile: true
+            stripComments: false
+      rollback:
+        - sqlFile:
+            path: ../../05_rollbacks/01_ddl/04_alter/001_add_fks_payment.rollback.sql
+            relativeToChangelogFile: true
+            stripComments: false

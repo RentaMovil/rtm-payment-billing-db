@@ -1,0 +1,12 @@
+-- Data access only, and only on the payment schema: no DDL (that's Liquibase's job with its own
+-- account), no access to other services' schemas or to dbo (Liquibase history tables).
+--
+-- UPDATE at schema level also covers NEXT VALUE FOR on payment.seq_invoice_number -- SQL Server
+-- requires UPDATE permission on a sequence object to advance it, and a schema-level grant applies
+-- to every object inside the schema, sequences included.
+--
+-- This is what enforces the data-ownership matrix in 09-microservices/service-catalog.md on a
+-- physically shared database: payment_app cannot read iam.*, booking.* or fleet.* even by
+-- mistake. The FKs that cross service boundaries still work (they are checked by the engine,
+-- not by the application user) -- "integrity for free, not a read channel" (data-model.md).
+GRANT SELECT, INSERT, UPDATE, DELETE ON SCHEMA::payment TO payment_app;
