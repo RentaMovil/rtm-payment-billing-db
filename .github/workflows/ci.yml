@@ -35,12 +35,20 @@ jobs:
       - name: Create the shared Docker network
         run: docker network create rentamovil
 
+      # Detached + wait on the "migrations" container specifically, not --abort-on-container-exit:
+      # that flag would stop the whole compose project -- including the long-running sqlserver
+      # container -- the moment any one container exits, leaving later steps with no database.
       - name: Start SQL Server and apply iam's migrations
         working-directory: rtm-iam-db
         env:
           MSSQL_SA_PASSWORD: "CiOnly_${{ github.run_id }}!"
           IAM_APP_PASSWORD: "CiOnly_App123!"
-        run: docker compose up --build --abort-on-container-exit --exit-code-from migrations
+        run: |
+          docker compose up -d --build
+          cid=$(docker compose ps -q migrations)
+          docker wait "$cid"
+          docker compose logs migrations
+          exit "$(docker inspect "$cid" --format='{{.State.ExitCode}}')"
 
       - name: "Apply booking-reservation's migrations (stops at its own payment FK, expected)"
         working-directory: rtm-booking-db
@@ -48,10 +56,16 @@ jobs:
         env:
           MSSQL_SA_PASSWORD: "CiOnly_${{ github.run_id }}!"
           BOOKING_APP_PASSWORD: "CiOnly_App123!"
-        run: docker compose up --build --abort-on-container-exit --exit-code-from migrations
+        run: |
+          docker compose up -d --build
+          cid=$(docker compose ps -q migrations)
+          docker wait "$cid"
+          docker compose logs migrations
+          exit "$(docker inspect "$cid" --format='{{.State.ExitCode}}')"
 
       # If this fails, check that booking.reservation actually got created in the step above
-      # before assuming the bug is in this repo's own changelog.
+      # before assuming the bug is in this repo's own changelog. Last step, nothing needs the
+      # database afterward, so abort-on-container-exit is fine here.
       - name: Apply this repo's Liquibase migrations
         working-directory: own
         env:
